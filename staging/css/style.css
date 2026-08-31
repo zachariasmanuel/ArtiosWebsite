@@ -1,0 +1,2242 @@
+/* ─────────────────────────────────────────
+   Artios Stays — Stylesheet
+   White / pastel-orange, light-mode palette.
+   ───────────────────────────────────────── */
+
+/* ── Tokens ── */
+:root {
+  /* Core palette — white body, pastel-orange accents, warm-brown text.
+     Photo/video heroes (.hero, .cta-banner, .page-hero) are the one
+     deliberate exception: they keep a dark scrim over the image for text
+     legibility, same as almost every light-mode site with a photo hero. */
+  --black:        #2A1B10;
+  --dark-2:       #3A2818;
+  --dark-3:       #4A3524;
+  --terracotta:       #C1592E;
+  --terracotta-light: #E0885A;
+  --terracotta-deep:  #7A3419;
+  --terracotta-pale:  #FFE3CC;
+  /* Accessible solid-fill orange: white text at 4.5:1+ against this, unlike
+     --terracotta (4.43:1, fails AA) or --terracotta-light (fails outright).
+     Used for solid button backgrounds and as the gradient's light-end stop
+     so white/cream text and icons stay compliant everywhere the gradient
+     is used as a background. */
+  --terracotta-mid:   #A8481F;
+  --cream:        #FFFBF7;
+  --cream-2:      #FFF3E9;
+  --peach:        #F0C9A6;
+  --pastel:       #FFC89B;
+  --white:        #FFFFFF;
+
+  --text-on-dark:       #FFF8F2;
+  --text-on-dark-mid:   rgba(255,248,242,.62);
+  --text-on-dark-light: rgba(255,248,242,.4);
+  --text-on-dark-faint: rgba(255,248,242,.16);
+
+  --text-on-light:      #2A1B10;
+  --text-on-light-mid:  #6B5645;
+  --text-on-light-light:#9C8570;
+
+  --border-dark:  rgba(255,248,242,.14);
+  --border-light: #F0DECB;
+
+  --gradient-terracotta: linear-gradient(135deg, var(--terracotta-deep) 0%, var(--terracotta-mid) 100%);
+  /* Soft pastel band — verified: dark --text-on-light stays 11:1+ against
+     both ends, so full-bleed banners (stat band, benefits) can use this
+     with dark text instead of the old deep-orange-with-white-text look. */
+  --gradient-pastel: linear-gradient(135deg, var(--terracotta-pale) 0%, var(--pastel) 100%);
+  --gradient-cta: linear-gradient(180deg, var(--cream) 0%, var(--terracotta-pale) 55%, var(--pastel) 100%);
+
+  --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-sans:  'Inter', system-ui, -apple-system, sans-serif;
+
+  --shadow-sm:  0 1px 8px rgba(60,35,15,.08);
+  --shadow-md:  0 8px 30px rgba(60,35,15,.12);
+  --shadow-lg:  0 20px 60px rgba(60,35,15,.18);
+
+  --radius-pill: 999px;
+  --radius-card: 26px;
+  --radius-card-sm: 16px;
+
+  --transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-sans);
+  background: var(--white);
+  color: var(--text-on-light);
+  line-height: 1.6;
+  font-weight: 300;
+  -webkit-font-smoothing: antialiased;
+}
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+/* ── Scroll Progress ── */
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 2px;
+  background: var(--gradient-terracotta);
+  width: 0%;
+  z-index: 200;
+  pointer-events: none;
+}
+
+/* ── Layout ── */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+.section { padding: 120px 0; }
+.section--light { background: var(--cream); color: var(--text-on-light); }
+.section__header {
+  text-align: center;
+  max-width: 580px;
+  margin: 0 auto 72px;
+}
+
+/* ── Eyebrow — light-mode default (most of the site); .section--on-dark
+   overrides it back for the photo-hero exceptions (hero/cta-banner). ── */
+.section__eyebrow {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--terracotta-deep);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.section__eyebrow::before,
+.section__eyebrow::after {
+  content: '';
+  display: block;
+  width: 32px;
+  height: 1px;
+  background: var(--terracotta);
+  opacity: .4;
+  flex-shrink: 0;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1) 0.35s;
+}
+[data-animate].visible .section__eyebrow::before,
+[data-animate].visible .section__eyebrow::after {
+  transform: scaleX(1);
+}
+.cta-banner .section__eyebrow::before,
+.cta-banner .section__eyebrow::after,
+.cta-gradient .section__eyebrow::before,
+.cta-gradient .section__eyebrow::after {
+  transform: scaleX(1);
+  transition: none;
+}
+
+/* ── Section headings — light-mode default ── */
+.section__title {
+  font-family: var(--font-serif);
+  font-size: clamp(30px, 3.8vw, 48px);
+  font-weight: 300;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  color: var(--text-on-light);
+  margin-bottom: 16px;
+}
+.section__title em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--terracotta);
+}
+.section__subtitle {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--text-on-light-mid);
+  line-height: 1.85;
+}
+.desktop-only { display: inline; }
+
+/* Visually hidden but still readable by screen readers/assistive tech —
+   used where a heading needs to exist for correct document structure
+   (no skipped levels) without adding a redundant visible line of copy. */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Buttons (pill) ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 30px;
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  transition: background var(--transition), color var(--transition),
+              border-color var(--transition), transform 0.15s ease, box-shadow var(--transition);
+  white-space: nowrap;
+  border-radius: var(--radius-pill);
+  position: relative;
+  overflow: hidden;
+}
+.btn:active { transform: scale(0.97); }
+.btn__arrow { transition: transform var(--transition); }
+.btn:hover .btn__arrow { transform: translateX(3px); }
+
+.btn--dark {
+  background: var(--black);
+  color: var(--cream);
+  border: 1px solid var(--black);
+}
+.btn--dark:hover {
+  background: var(--dark-3);
+  box-shadow: var(--shadow-md);
+}
+.btn--gold {
+  background: var(--terracotta-mid);
+  color: var(--white);
+  border: 1px solid var(--terracotta-mid);
+}
+.btn--gold:hover {
+  background: var(--terracotta-deep);
+  border-color: var(--terracotta-deep);
+  box-shadow: var(--shadow-md);
+}
+.btn--outline-white {
+  background: transparent;
+  color: var(--white);
+  border: 1px solid rgba(255,255,255,.4);
+}
+.btn--outline-white:hover {
+  background: rgba(255,255,255,.15);
+  border-color: rgba(255,255,255,.8);
+}
+.btn--cream {
+  background: var(--white);
+  color: var(--text-on-light);
+  border: 1px solid var(--border-light);
+}
+.btn--cream:hover {
+  background: var(--cream-2);
+  box-shadow: var(--shadow-md);
+}
+.btn--lg {
+  padding: 19px 40px;
+  font-size: 11px;
+}
+@keyframes ripple {
+  to { transform: scale(2.8); opacity: 0; }
+}
+.btn__ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,.22);
+  transform: scale(0);
+  animation: ripple 0.55s ease-out forwards;
+  pointer-events: none;
+}
+
+/* ── Navigation — white bar, dark text ──
+   backdrop-filter lives on ::before, not on .nav itself: a filter/
+   backdrop-filter on an element makes IT the containing block for any
+   position:fixed descendant, instead of the viewport. .nav__links (the
+   mobile drawer) is one such descendant — with the filter on .nav
+   directly, its "top:0; bottom:0" resolved against .nav's own ~80px
+   height instead of the real viewport, collapsing the full-height
+   slide-in drawer into a small box pinned near the top. */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 18px 0;
+  transition: var(--transition);
+}
+.nav::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 1px 0 var(--border-light);
+  transition: var(--transition);
+}
+.nav.scrolled::before {
+  background: rgba(255,255,255,.97);
+  box-shadow: 0 2px 12px rgba(60,35,15,.06);
+}
+.nav.scrolled {
+  padding: 10px 0;
+}
+.nav__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav__logo { display: flex; align-items: center; }
+.nav__logo-img {
+  height: 46px;
+  width: auto;
+  /* Deliberately static — no shrink-on-scroll sizing. */
+  transition: opacity var(--transition);
+}
+.nav__logo:hover .nav__logo-img { opacity: 0.75; }
+/* The nav is always light now, so it always wants the dark-ink logo mark. */
+.nav__logo-img--black { display: block; }
+.nav__logo-img--white { display: none; }
+
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 44px;
+}
+.nav__link {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-on-light-mid);
+  transition: color var(--transition);
+  position: relative;
+  padding-bottom: 2px;
+}
+.nav__link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 50%; right: 50%;
+  height: 1px;
+  background: var(--terracotta);
+  transition: left var(--transition), right var(--transition);
+}
+.nav__link:hover { color: var(--text-on-light); }
+.nav__link:hover::after,
+.nav__link.active::after { left: 0; right: 0; }
+.nav__link.active { color: var(--text-on-light); }
+
+.nav__cta {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  padding: 11px 24px;
+}
+.nav__hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  padding: 4px;
+}
+.nav__hamburger span {
+  display: block;
+  width: 22px;
+  height: 1px;
+  background: var(--text-on-light);
+  transition: var(--transition);
+}
+
+/* ── Hero — photo/video hero keeps its dark scrim for legibility, warmed
+   toward the new palette rather than staying stark near-black. This is
+   the one deliberate "not literally white" zone, same as almost any
+   light-mode site with a full-bleed photo hero. ── */
+.hero {
+  position: relative;
+  height: 100svh;
+  min-height: 640px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+/* isolation:isolate gives .hero__bg its own contained stacking context, so
+   the explicit z-index values below are only ever compared against each
+   other — never against .hero__content next door. Learned the hard way:
+   .hero__img's `will-change: transform` (for the scroll-parallax effect)
+   silently made it establish a stacking context too, with no z-index at
+   all — CSS still treats that as z-index:0, ordered by DOM position among
+   siblings in the same bucket, which put the img (later in the HTML)
+   ABOVE the video. It looked identical to the real thing in screenshots
+   (the poster is a frame from the same footage) while actually just
+   being a static picture sitting in front of a video playing invisibly
+   underneath — no amount of the video actually working fixed that. */
+.hero__bg { position: absolute; inset: 0; isolation: isolate; }
+.hero__img {
+  width: 100%;
+  height: 115%;
+  object-fit: cover;
+  object-position: center 60%;
+  will-change: transform;
+  position: relative;
+  z-index: 1;
+}
+/* Hidden by default everywhere — JS reveals it (adds .video-active to
+   .hero) only once it has actually decided to play: always on desktop,
+   and on mobile only over a connection that looks good enough (see
+   main.js). Gating visibility AND the decision to fetch through the same
+   JS switch means a mobile visitor on a poor connection never downloads
+   the video at all, not just never sees it — the old version hid it with
+   a media query alone, which did nothing to stop the browser fetching an
+   `autoplay` video's source regardless of its CSS display. */
+.hero__video, .hero__video-toggle { display: none; }
+.hero.video-active .hero__video { display: block; }
+.hero.video-active .hero__video-toggle { display: flex; }
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 2;
+  /* This footage is a near-static drone hold — barely any motion of its
+     own, which reads as a frozen photo even while it's genuinely
+     decoding and playing. A slow Ken Burns zoom gives it visible life
+     without needing different footage. Killed automatically by the
+     global prefers-reduced-motion rule, and paused/resumed in sync with
+     the video itself via JS (see the play/pause handlers in main.js). */
+  animation: heroKenBurns 26s ease-in-out infinite alternate;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+/* Both the forward and reverse <video> elements sit stacked at the same
+   z-index (2) the whole time once .video-active is on — the reverse one
+   is preloading in the background so it's frame-ready the instant the
+   forward one ends. Only .is-active is actually visible; the swap in
+   main.js's `ended` handler is a hard opacity toggle with no transition,
+   which is what makes it read as seamless — the reversed file's first
+   frame is pixel-identical to the forward file's last, so a crossfade
+   would only blur a cut that doesn't need hiding. */
+.hero__video { opacity: 0; }
+.hero__video.is-active { opacity: 1; }
+@keyframes heroKenBurns {
+  from { transform: scale(1); }
+  to   { transform: scale(1.1); }
+}
+/* Required stop control for auto-moving content (WCAG 2.2.2) — also lets
+   anyone kill the motion regardless of their OS reduced-motion setting. */
+.hero__video-toggle {
+  /* Sits below the fixed nav and clear of the .hero__stats bar at the
+     bottom (which would otherwise paint over it — verified with a
+     hit-test, not just eyeballed). */
+  position: absolute;
+  right: 24px;
+  top: 110px;
+  z-index: 4;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(42,27,16,.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,248,242,.3);
+  color: var(--white);
+  /* display is set by the .hero.video-active rule above, not here — this
+     button should never be visible while the video itself isn't active. */
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition), border-color var(--transition);
+}
+.hero__video-toggle:hover { background: rgba(42,27,16,.7); border-color: rgba(255,248,242,.55); }
+.hero__video-toggle-icon--play { display: none; }
+.hero__video-toggle.is-paused .hero__video-toggle-icon--pause { display: none; }
+.hero__video-toggle.is-paused .hero__video-toggle-icon--play { display: block; }
+.hero__overlay {
+  position: absolute; inset: 0;
+  z-index: 3;
+  background: linear-gradient(
+    to bottom,
+    rgba(42,27,16,.8) 0%,
+    rgba(74,45,25,.64) 40%,
+    rgba(42,27,16,.87) 100%
+  );
+}
+.hero__content {
+  position: relative;
+  text-align: center;
+  padding: 0 24px;
+  max-width: 860px;
+  animation: heroFadeUp 1.2s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: 0.2s;
+}
+.hero__eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--pastel);
+  text-shadow: 0 1px 10px rgba(0,0,0,.55), 0 1px 2px rgba(0,0,0,.4);
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+.hero__eyebrow::before,
+.hero__eyebrow::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: rgba(255,200,155,.5);
+  flex-shrink: 0;
+  transform: scaleX(0);
+  transform-origin: center;
+  animation: lineExpand 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation-delay: 1.1s;
+}
+.hero__title {
+  font-family: var(--font-serif);
+  font-size: clamp(52px, 8.5vw, 108px);
+  font-weight: 300;
+  line-height: 1.03;
+  letter-spacing: 0.015em;
+  color: var(--white);
+  text-shadow: 0 2px 20px rgba(0,0,0,.5), 0 1px 4px rgba(0,0,0,.35);
+  margin-bottom: 28px;
+}
+.hero__title em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--pastel);
+}
+.hero__subtitle {
+  font-size: clamp(14px, 1.5vw, 16px);
+  font-weight: 300;
+  color: rgba(255,248,242,.88);
+  text-shadow: 0 1px 10px rgba(0,0,0,.5), 0 1px 2px rgba(0,0,0,.35);
+  line-height: 1.95;
+  margin-bottom: 48px;
+}
+.hero__actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ── Hero stats ── */
+.hero__stats {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(42,27,16,.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid var(--border-dark);
+  padding: 22px 24px;
+  animation: heroFadeUp 1s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation-delay: 0.8s;
+}
+.hero__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 52px;
+  transition: transform var(--transition);
+}
+.hero__stat:hover { transform: translateY(-3px); }
+.hero__stat-num {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--pastel);
+  line-height: 1;
+}
+.hero__stat-label {
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,248,242,.6);
+  margin-top: 6px;
+}
+.hero__stat-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--border-dark);
+}
+
+/* ── About (legacy section, unused by current pages but kept in sync) ── */
+.about { background: var(--white); }
+.about__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  align-items: center;
+}
+.about__text .section__eyebrow { justify-content: flex-start; }
+.about__text .section__eyebrow::before { display: none; }
+.about__text .section__title { text-align: left; }
+.about__desc {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--text-on-light-mid);
+  line-height: 2;
+  margin-bottom: 18px;
+}
+.about__text .btn { margin-top: 20px; }
+
+.about__features { display: flex; flex-direction: column; }
+
+/* ── Stagger ── */
+[data-stagger] > * {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+[data-stagger] > *.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Feature cards ── */
+.feature-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+  padding: 26px 0;
+  padding-left: 0;
+  border-bottom: 1px solid var(--border-light);
+  transition: padding-left var(--transition), border-color var(--transition);
+}
+.feature-card:first-child { border-top: 1px solid var(--border-light); }
+.feature-card:hover {
+  padding-left: 10px;
+  border-color: var(--terracotta);
+}
+.feature-card__icon {
+  flex-shrink: 0;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  background: var(--gradient-terracotta);
+  margin-top: 2px;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+.feature-card:hover .feature-card__icon {
+  transform: scale(1.08) rotate(-6deg);
+  box-shadow: var(--shadow-md);
+}
+.feature-card__title {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-on-light);
+  margin-bottom: 6px;
+  transition: color var(--transition);
+}
+.feature-card__desc {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text-on-light-mid);
+  line-height: 1.75;
+}
+
+/* ── Properties ── */
+.properties { background: var(--cream); color: var(--text-on-light); }
+.properties__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-bottom: 60px;
+}
+.property-card {
+  position: relative;
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+/* Stretched-link: makes the *entire* card open the villa page, not just
+   the photo or the name text. The <a> itself stays static (unpositioned)
+   so its ::after's position:absolute resolves against the nearest
+   positioned ancestor — .property-card above — letting inset:0 cover the
+   whole card exactly, at any card height, with no hardcoded size. The
+   WhatsApp "Enquire Now" button stays reachable on top via its own
+   higher z-index below. */
+.property-card__name a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.property-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-6px);
+}
+.property-card__media {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 3/2;
+}
+.property-card__img-link { display: block; width: 100%; height: 100%; }
+.property-card__img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s ease;
+}
+.property-card:hover .property-card__img { transform: scale(1.06); }
+.property-card__badge {
+  position: absolute;
+  top: 16px; left: 16px;
+  background: var(--white);
+  color: var(--text-on-light);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+}
+.property-card__tag {
+  position: absolute;
+  top: 16px; right: 16px;
+  background: var(--terracotta-mid);
+  color: var(--white);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: var(--radius-pill);
+}
+.property-card__overlay {
+  position: absolute; inset: 0;
+  background: rgba(42,27,16,.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  /* Always pointer-events:none, even while shown on hover — it's a full-
+     photo dark tint that only exists to center one small button; without
+     this, the *whole* photo (not just the button) would swallow clicks the
+     instant it's hovered, silently blocking .property-card__img-link
+     underneath everywhere except exactly on the button. The button itself
+     re-enables its own pointer-events below. */
+  pointer-events: none;
+  transition: opacity var(--transition);
+}
+.property-card:hover .property-card__overlay { opacity: 1; }
+/* z-index:2 — one tier above the whole-card stretched-link (z-index:1 on
+   .property-card__name a::after) so this button still wins the click,
+   not the link underneath it, even though the stretched link now covers
+   the photo too. */
+.property-card__overlay .btn { pointer-events: auto; z-index: 2; }
+.property-card__body { padding: 30px; }
+.property-card__location {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--terracotta-deep);
+  margin-bottom: 10px;
+}
+.property-card__name {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  color: var(--text-on-light);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.property-card__name a {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition);
+}
+.property-card__name a:hover { color: var(--terracotta-deep); }
+.property-card__desc {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text-on-light-mid);
+  line-height: 1.75;
+  margin-bottom: 20px;
+}
+.property-card__specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-light);
+}
+.spec {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-on-light-mid);
+}
+.spec--security { color: var(--terracotta-deep); font-weight: 500; }
+.property-card__amenities { display: flex; flex-wrap: wrap; }
+.amenity {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-on-light-mid);
+}
+.amenity:not(:last-child)::after {
+  content: ' · ';
+  margin: 0 6px;
+  opacity: 0.5;
+}
+.properties__cta { text-align: center; }
+.properties__cta p {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text-on-light-mid);
+  margin-bottom: 24px;
+}
+
+/* ── Testimonials — light section, pastel-tinted cards for separation
+   against the white/cream page around them ── */
+.testimonials {
+  background: var(--white);
+  overflow: hidden;
+}
+.testimonials__track-wrapper {
+  overflow: hidden;
+  margin: 0 -40px;
+  padding: 0 40px;
+}
+.testimonials__track {
+  display: flex;
+  gap: 24px;
+  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.testimonial-card {
+  flex: 0 0 calc(33.333% - 16px);
+  background: var(--cream-2);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card);
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+}
+.testimonial-card:hover {
+  transform: translateY(-4px);
+  background: var(--white);
+  box-shadow: var(--shadow-lg);
+}
+.testimonial-card__stars {
+  color: var(--terracotta-deep);
+  font-size: 12px;
+  letter-spacing: 4px;
+  margin-bottom: 20px;
+}
+.testimonial-card__quote {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--text-on-light);
+  line-height: 1.75;
+  flex: 1;
+  margin-bottom: 24px;
+}
+.testimonial-card__author {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-light);
+}
+.testimonial-card__avatar {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--gradient-terracotta);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.testimonial-card__name {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--terracotta-deep);
+}
+.testimonial-card__location {
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--text-on-light-mid);
+}
+.testimonials__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 48px;
+}
+.testimonials__btn {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border-light);
+  color: var(--text-on-light-mid);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+.testimonials__btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--gradient-terracotta);
+  transform: scale(0);
+  transition: transform var(--transition);
+  z-index: 0;
+  border-radius: 50%;
+}
+.testimonials__btn svg { position: relative; z-index: 1; }
+.testimonials__btn:hover {
+  border-color: var(--terracotta);
+  color: var(--white);
+}
+.testimonials__btn:hover::before { transform: scale(1); }
+.testimonials__dots { display: flex; gap: 8px; align-items: center; }
+.testimonials__dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--border-light);
+  transition: var(--transition);
+  cursor: pointer;
+}
+.testimonials__dot.active { background: var(--terracotta); width: 22px; border-radius: var(--radius-pill); }
+.testimonials__dot:hover:not(.active) { background: var(--text-on-light-light); }
+
+/* ── Host ── */
+.host { background: var(--cream); color: var(--text-on-light); }
+.host__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  align-items: center;
+}
+.host__image-wrap { position: relative; }
+.host__image-frame {
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  aspect-ratio: 4/5;
+}
+.host__image {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s ease;
+}
+.host__image-wrap:hover .host__image { transform: scale(1.03); }
+.host__badge {
+  position: absolute;
+  bottom: -20px; right: -20px;
+  background: var(--gradient-terracotta);
+  color: var(--white);
+  border-radius: var(--radius-card-sm);
+  padding: 22px 28px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+.host__badge-num {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 1;
+  color: var(--white);
+}
+.host__badge-text {
+  display: block;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-top: 6px;
+  opacity: 0.85;
+}
+.host__content .section__eyebrow { justify-content: flex-start; }
+.host__content .section__eyebrow::before { display: none; }
+.host__content .section__title { text-align: left; margin-bottom: 4px; }
+.host__role {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--terracotta-deep);
+  margin-bottom: 28px;
+}
+.host__bio {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--text-on-light-mid);
+  line-height: 2;
+  margin-bottom: 16px;
+}
+.host__content .btn { margin-top: 20px; }
+
+/* ── CTA Banner (photo) — same dark-scrim exception as the hero ── */
+.cta-banner {
+  position: relative;
+  padding: 160px 24px;
+  text-align: center;
+  overflow: hidden;
+}
+.cta-banner__bg { position: absolute; inset: 0; }
+.cta-banner__img {
+  width: 100%; height: 115%;
+  object-fit: cover;
+  will-change: transform;
+}
+.cta-banner__overlay {
+  position: absolute; inset: 0;
+  /* Verified against the real downloaded photo: the previous bottom stop
+     (bright terracotta at only .55 opacity) left the em/subtitle text
+     there around 3.1–3.4:1. Darker + less saturated at the bottom fixes
+     it while keeping the warm glow. */
+  background: linear-gradient(180deg, rgba(42,27,16,.78) 0%, rgba(70,40,22,.75) 55%, rgba(90,50,25,.78) 100%);
+}
+.cta-banner__content {
+  position: relative;
+  max-width: 560px;
+  margin: 0 auto;
+}
+.cta-banner .section__eyebrow { color: var(--pastel); justify-content: center; }
+.cta-banner__title {
+  font-family: var(--font-serif);
+  font-size: clamp(44px, 6vw, 76px);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  color: var(--white);
+  line-height: 1.1;
+  margin-bottom: 20px;
+}
+.cta-banner__title em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--pastel);
+}
+.cta-banner__subtitle {
+  font-size: 15px;
+  font-weight: 300;
+  color: rgba(255,255,255,.75);
+  margin-bottom: 44px;
+  letter-spacing: 0.04em;
+}
+
+/* ── CTA Gradient (no photo — the "Have a villa ready?" teaser before the
+   footer on index.html) — fully light now, pale cream to pastel orange,
+   dark text throughout instead of the old dark-to-light transition. ── */
+.cta-gradient {
+  position: relative;
+  padding: 140px 24px 120px;
+  text-align: center;
+  background: var(--gradient-cta);
+  overflow: hidden;
+}
+.cta-gradient__content {
+  position: relative;
+  max-width: 580px;
+  margin: 0 auto;
+}
+.cta-gradient .section__eyebrow { color: var(--terracotta-deep); justify-content: center; }
+.cta-gradient .section__eyebrow::before,
+.cta-gradient .section__eyebrow::after { background: var(--terracotta); opacity: .5; }
+.cta-gradient__title {
+  font-family: var(--font-serif);
+  font-size: clamp(34px, 5vw, 56px);
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.01em;
+  color: var(--text-on-light);
+  line-height: 1.18;
+  margin-bottom: 40px;
+}
+.cta-gradient__title em {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--terracotta-deep);
+}
+
+/* ── Footer — light, warmed with a soft pastel-orange tint rather than
+   stark white, so it still reads as a distinct closing band. ── */
+.footer {
+  background: var(--cream-2);
+  color: var(--text-on-light-mid);
+  padding: 80px 0 0;
+  border-top: 1px solid var(--border-light);
+}
+.footer__grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 60px;
+  border-bottom: 1px solid var(--border-light);
+  align-items: start;
+}
+/* Matches .nav__logo-img exactly — the footer mark is the same brand
+   lockup at the same scale, not a separate, larger one. The old 108px
+   made it the loudest thing in the entire footer and threw off every
+   column next to it. */
+.footer__logo { margin-bottom: 16px; }
+.footer__logo-img { height: 46px; width: auto; }
+.footer__tagline {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: 15px;
+  color: var(--terracotta-deep);
+  margin-bottom: 14px;
+}
+.footer__desc {
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.85;
+  color: var(--text-on-light-mid);
+  margin-bottom: 24px;
+}
+.footer__whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-on-light);
+  font-size: 13px;
+  font-weight: 300;
+  transition: color var(--transition), gap var(--transition);
+}
+.footer__whatsapp:hover { color: var(--terracotta-deep); gap: 12px; }
+.footer__heading {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-on-light);
+  margin-bottom: 20px;
+}
+.footer__links {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.footer__links a {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text-on-light-mid);
+  transition: color var(--transition), padding-left var(--transition);
+  display: block;
+}
+.footer__links a:hover {
+  color: var(--terracotta-deep);
+  padding-left: 6px;
+}
+.footer__links li {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text-on-light-mid);
+}
+.footer__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 0;
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--text-on-light-mid);
+}
+
+/* ── Keyframes ── */
+@keyframes heroFadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes lineExpand {
+  to { transform: scaleX(1); }
+}
+
+/* ── Scroll-in animations ── */
+[data-animate] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+[data-animate].visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Reduced motion ── people who've asked their OS to minimize motion get
+   content that's just present, not faded/translated/parallaxed/autoplaying
+   in at them. This overrides the rules above and disables JS-driven motion
+   (parallax, hero-video autoplay, button ripple) via the .reduce-motion
+   class main.js adds when it detects the preference. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-animate], [data-stagger] > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+.reduce-motion .hero__img,
+.reduce-motion .cta-banner__img { transform: none !important; }
+
+/* ═════════════════════════════════════════
+   Partner page — mirrors hnhstays.com/partner's
+   structure (photo hero → stat band → process
+   grid → testimonials → benefits → service
+   areas → lead form) in the Artios palette.
+   ═════════════════════════════════════════ */
+
+/* Photo hero — same dark-scrim exception as the homepage hero */
+.page-hero {
+  position: relative;
+  height: 86vh;
+  min-height: 560px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+.page-hero__bg { position: absolute; inset: 0; }
+.page-hero__img { width: 100%; height: 100%; object-fit: cover; }
+.page-hero__overlay {
+  position: absolute; inset: 0;
+  /* This photo (a bright white villa) needs a much stronger, near-uniform
+     veil than a typical scrim — verified against the actual downloaded
+     image with real contrast math, not eyeballed: an earlier, weaker
+     version left the eyebrow/title/subtitle down around 1.2–2.1:1 (see
+     project memory for how this was caught). */
+  background: linear-gradient(180deg, rgba(42,27,16,.85) 0%, rgba(42,27,16,.85) 50%, rgba(58,37,20,.9) 100%);
+}
+.page-hero__content {
+  position: relative;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.page-hero__content .section__eyebrow { color: var(--pastel); }
+.page-hero__title {
+  font-family: var(--font-serif);
+  font-size: clamp(32px, 5.4vw, 58px);
+  font-weight: 300;
+  line-height: 1.2;
+  color: var(--white);
+  margin-bottom: 22px;
+}
+.page-hero__title em {
+  font-style: italic;
+  color: var(--pastel);
+}
+.page-hero__subtitle {
+  font-size: 15px;
+  font-weight: 300;
+  color: rgba(255,248,242,.78);
+  line-height: 1.9;
+  max-width: 560px;
+  margin: 0 auto 36px;
+}
+
+/* Stat band — full-width pastel strip below the hero, dark text */
+.stat-band {
+  background: var(--gradient-pastel);
+  padding: 52px 24px;
+}
+.stat-band__row {
+  max-width: 860px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 20px 0;
+}
+.stat-band__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 56px;
+}
+.stat-band__num {
+  font-family: var(--font-serif);
+  font-size: 38px;
+  font-weight: 300;
+  color: var(--terracotta-deep);
+  line-height: 1;
+}
+.stat-band__label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-on-light);
+  opacity: .72;
+  margin-top: 10px;
+}
+.stat-band__divider { width: 1px; height: 36px; background: rgba(42,27,16,.16); }
+
+/* Process — 2x2 card grid, white cards on a light section */
+.process { background: var(--cream); }
+.process__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+.process-card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+.process-card__head {
+  background: var(--gradient-terracotta);
+  padding: 13px 26px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+.process-card__body { padding: 30px; }
+.process-card__icon {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--terracotta-pale);
+  border: 1px solid rgba(193,89,46,.3);
+  color: var(--terracotta-deep);
+  margin-bottom: 18px;
+}
+.process-card__title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--text-on-light);
+  margin-bottom: 10px;
+}
+.process-card__desc {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text-on-light-mid);
+  line-height: 1.75;
+  margin-bottom: 18px;
+}
+.process-card__list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 16px;
+}
+.process-card__list li {
+  position: relative;
+  padding-left: 16px;
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--text-on-light-mid);
+  line-height: 1.6;
+}
+.process-card__list li::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 7px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--terracotta);
+}
+
+/* Owner testimonials (2-up quote cards, light section) */
+.owner-testimonials { background: var(--white); }
+.owner-testimonials__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.owner-testimonials .testimonial-card { flex: none; }
+.owner-testimonials .testimonial-card__quote { font-size: 17px; }
+
+/* "What You Get" — pastel band, white benefit cards */
+.benefits { background: var(--gradient-pastel); }
+.benefits .section__eyebrow { color: var(--terracotta-deep); }
+.benefits .section__eyebrow::before,
+.benefits .section__eyebrow::after { background: var(--terracotta); opacity: .5; }
+.benefits .section__title { color: var(--text-on-light); }
+.benefits .section__title em { color: var(--terracotta-deep); }
+.benefits__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.benefit-card {
+  background: var(--white);
+  border-radius: var(--radius-card-sm);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+}
+.benefit-card__icon {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: var(--gradient-terracotta);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+.benefit-card__title {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-on-light);
+  margin-bottom: 8px;
+}
+.benefit-card__desc {
+  font-size: 12.5px;
+  font-weight: 300;
+  color: var(--text-on-light-mid);
+  line-height: 1.75;
+}
+
+/* "Where We Work" — service-area cards */
+.work { background: var(--cream); color: var(--text-on-light); }
+.work__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  max-width: 620px;
+  margin: 0 auto 52px;
+  text-align: center;
+}
+.work-card__icon {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--gradient-terracotta);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+.work-card__title {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-on-light);
+  margin-bottom: 6px;
+}
+.work-card__desc {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text-on-light-mid);
+  line-height: 1.7;
+}
+.work__pitch { text-align: center; max-width: 560px; margin: 0 auto; }
+.work__pitch p {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--text-on-light-mid);
+  line-height: 1.85;
+  margin-bottom: 28px;
+}
+
+/* Lead form — the real, functional CTA (builds a WhatsApp/email message
+   client-side) */
+.lead { background: var(--cream-2); color: var(--text-on-light); }
+.lead__grid {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 64px;
+  align-items: start;
+}
+.lead__title {
+  font-family: var(--font-serif);
+  font-size: clamp(26px, 3vw, 38px);
+  font-weight: 300;
+  line-height: 1.3;
+  color: var(--text-on-light);
+  margin-bottom: 16px;
+}
+.lead__note {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--text-on-light-mid);
+  line-height: 1.8;
+}
+.lead-form {
+  background: var(--white);
+  border-radius: var(--radius-card);
+  padding: 36px;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  /* Grid items default to min-width:auto, i.e. never shrinking below
+     their content's own min-content size — and a <select>'s intrinsic
+     width is driven by its longest <option> text ("Current Listing
+     Status" etc.), which was wider than the mobile single-column
+     .lead__grid track. That pushed this form (and the whole page)
+     wider than the viewport, causing real horizontal scroll on phones. */
+  min-width: 0;
+}
+.lead-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.lead-form__field label {
+  display: block;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-on-light-mid);
+  margin-bottom: 7px;
+}
+.lead-form input,
+.lead-form select,
+.lead-form textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--text-on-light);
+  background: var(--cream-2);
+  transition: border-color var(--transition), background var(--transition);
+}
+.lead-form input:focus,
+.lead-form select:focus,
+.lead-form textarea:focus {
+  outline: none;
+  border-color: var(--terracotta);
+  background: var(--white);
+  /* Replaces the suppressed native outline with an equally visible ring —
+     never remove :focus outline without a real substitute (WCAG 2.4.7). */
+  box-shadow: 0 0 0 3px rgba(193,89,46,.28);
+}
+.lead-form textarea { resize: vertical; min-height: 88px; }
+.lead-form .btn { justify-content: center; margin-top: 4px; }
+
+/* ═════════════════════════════════════════
+   Simple hero — light-bg hero used on About,
+   Villas and Contact (no photo, so no dark
+   scrim needed — fully in the light palette).
+   ═════════════════════════════════════════ */
+.simple-hero {
+  background: var(--cream-2);
+  text-align: center;
+  padding: 170px 24px 90px;
+}
+.simple-hero__content { max-width: 720px; margin: 0 auto; }
+.simple-hero__title {
+  font-family: var(--font-serif);
+  font-size: clamp(32px, 5vw, 54px);
+  font-weight: 300;
+  line-height: 1.2;
+  color: var(--text-on-light);
+  margin-bottom: 18px;
+}
+.simple-hero__title em { font-style: italic; color: var(--terracotta); }
+.simple-hero__subtitle {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--text-on-light-mid);
+  line-height: 1.85;
+  max-width: 540px;
+  margin: 0 auto;
+}
+.simple-hero__actions { margin-top: 32px; display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+
+/* ── About — story + pull-quote ── */
+.story { background: var(--white); color: var(--text-on-light); }
+.story__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.story__lede {
+  font-family: var(--font-serif);
+  font-size: clamp(22px, 2.6vw, 30px);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.4;
+  color: var(--terracotta-deep);
+  margin-bottom: 24px;
+}
+.story__body p {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--text-on-light-mid);
+  line-height: 1.95;
+  margin-bottom: 16px;
+}
+.story__photo { position: relative; }
+.story__photo-frame {
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  aspect-ratio: 4/5;
+}
+.story__photo-frame img { width: 100%; height: 100%; object-fit: cover; }
+.story__quote {
+  margin-top: 40px;
+  padding: 28px 32px;
+  background: var(--cream-2);
+  border-left: 3px solid var(--terracotta);
+  border-radius: var(--radius-card-sm);
+  box-shadow: var(--shadow-sm);
+}
+.story__quote p {
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--text-on-light);
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.story__quote cite {
+  font-style: normal;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--terracotta-deep);
+  font-weight: 500;
+}
+
+/* ── About — "The Artios Way" numbered list, light section ── */
+.way { background: var(--cream); }
+.way__list { max-width: 720px; margin: 0 auto; }
+.way-item {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 24px;
+  padding: 32px 0;
+  border-top: 1px solid var(--border-light);
+}
+.way__list .way-item:last-child { border-bottom: 1px solid var(--border-light); }
+.way-item__num {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 400;
+  /* --terracotta only clears AA at large-text sizes (≥24px) — this drops
+     to 20px on mobile (see the 768px breakpoint below), which needs the
+     full 4.5:1 that --terracotta doesn't quite reach. --terracotta-deep
+     passes at any size, so it's used here regardless of breakpoint. */
+  color: var(--terracotta-deep);
+}
+.way-item__title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--text-on-light);
+  margin-bottom: 8px;
+}
+.way-item__desc {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--text-on-light-mid);
+  line-height: 1.85;
+  max-width: 480px;
+}
+
+/* ── Villas — filter tabs ── */
+.filter-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 56px;
+}
+.filter-tab {
+  display: inline-block;
+  padding: 11px 22px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-light);
+  background: var(--white);
+  color: var(--text-on-light-mid);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: var(--transition);
+}
+.filter-tab:hover { border-color: var(--terracotta); color: var(--terracotta-deep); }
+.filter-tab.active { background: var(--terracotta-mid); border-color: var(--terracotta-mid); color: var(--white); }
+
+/* ── Villas — price + tag additions on the shared .property-card ── */
+.property-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+  gap: 12px;
+}
+.property-card__price { text-align: right; white-space: nowrap; }
+.property-card__price-num {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  color: var(--terracotta-deep);
+}
+.property-card__price-unit {
+  display: block;
+  font-size: 10px;
+  color: var(--text-on-light-mid);
+  letter-spacing: 0.04em;
+}
+.villas__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+  max-width: 1000px;
+  margin: 0 auto 64px;
+}
+/* Real listing counts (10 in Goa, growing) need a third column to stay
+   scannable at desktop widths rather than turning into one long scroll. */
+.villas__grid--wide { grid-template-columns: repeat(3, 1fr); max-width: 1160px; }
+/* Region wrapper the Goa/Sri Lanka filter-tab links jump to — scroll-margin
+   handles the fixed-nav offset natively as a fallback alongside main.js's
+   own smooth-anchor-offset handler (which pre-empts the native jump). */
+.villas__region { scroll-margin-top: 100px; }
+.villas__region-title {
+  max-width: 1000px;
+  margin: 0 auto 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-light);
+  font-family: var(--font-serif);
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--text-on-light);
+}
+
+/* ── Homepage quick-link cards ── */
+.quicklinks { background: var(--cream); color: var(--text-on-light); }
+.quicklinks__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border-light);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+.quicklink-card {
+  background: var(--white);
+  padding: 36px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  transition: background var(--transition);
+}
+.quicklink-card:hover { background: var(--cream-2); }
+.quicklink-card__title {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-on-light);
+  margin-bottom: 6px;
+}
+.quicklink-card__desc { font-size: 13px; color: var(--text-on-light-mid); }
+.quicklink-card__arrow {
+  flex-shrink: 0;
+  color: var(--terracotta);
+  transition: transform var(--transition);
+}
+.quicklink-card:hover .quicklink-card__arrow { transform: translateX(4px); }
+
+/* ── Homepage "Say Hello" strip ── */
+.say-hello { background: var(--cream-2); text-align: center; }
+.say-hello__email {
+  display: inline-block;
+  font-family: var(--font-serif);
+  font-size: clamp(20px, 2.4vw, 26px);
+  font-style: italic;
+  color: var(--terracotta-deep);
+  margin: 8px 0 6px;
+}
+.say-hello__note { font-size: 13px; color: var(--text-on-light-mid); margin-bottom: 28px; }
+
+/* ── Contact page ── */
+.contact-info { display: flex; flex-direction: column; gap: 28px; margin-top: 36px; }
+.contact-info__item { display: flex; gap: 18px; align-items: flex-start; }
+.contact-info__icon {
+  flex-shrink: 0;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--gradient-terracotta);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.contact-info__title {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  color: var(--text-on-light);
+  margin-bottom: 4px;
+}
+.contact-info__value { font-size: 14px; color: var(--terracotta-deep); }
+.contact-info__value a { color: inherit; }
+.contact-info__note { font-size: 13px; color: var(--text-on-light-mid); }
+.contact-social {
+  display: flex;
+  gap: 12px;
+  margin-top: 36px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border-light);
+}
+.contact-social__icon {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border-light);
+  color: var(--text-on-light-mid);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+a.contact-social__icon:hover { border-color: var(--terracotta); color: var(--terracotta); }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .properties__grid { grid-template-columns: repeat(2, 1fr); }
+  /* Scoped to .properties__grid specifically — this was unscoped before
+     and quietly broke villas.html's grids too: any grid whose last card
+     happened to be a lone :last-child got an unwanted implicit extra
+     column forced onto the *whole* grid (not just that card), corrupting
+     every column's width in the 900–1024px tablet range. Caught via
+     getComputedStyle on the container returning two wildly uneven tracks
+     ("2px 450px") instead of the single evenly-sized one every rule
+     candidate actually declared. */
+  .properties__grid .property-card:last-child { grid-column: span 2; max-width: 480px; margin: 0 auto; }
+  .footer__grid { grid-template-columns: 1fr 1fr; gap: 36px; }
+  .footer__brand { grid-column: span 2; }
+  .villas__grid--wide { grid-template-columns: repeat(2, 1fr); max-width: 1000px; }
+}
+
+@media (max-width: 900px) {
+  .about__grid, .host__grid { grid-template-columns: 1fr; gap: 60px; }
+  .about__text .section__title,
+  .about__text .section__eyebrow,
+  .about__text { text-align: center; }
+  .about__text .section__eyebrow { justify-content: center; }
+  .about__text .section__eyebrow::before { display: block; }
+  .host__image-wrap { max-width: 400px; margin: 0 auto; }
+  .testimonial-card { flex: 0 0 calc(80vw - 1px); }
+  .owner-testimonials__grid { grid-template-columns: 1fr; }
+
+  .process__grid { grid-template-columns: 1fr; max-width: 560px; }
+  .benefits__grid { grid-template-columns: 1fr 1fr; }
+  .work__grid { grid-template-columns: 1fr; max-width: 320px; gap: 40px; }
+  .lead__grid { grid-template-columns: 1fr; gap: 40px; }
+  .story__grid { grid-template-columns: 1fr; gap: 48px; }
+  .story__photo-frame { max-width: 420px; margin: 0 auto; }
+  .villas__grid { grid-template-columns: 1fr; max-width: 480px; }
+  .quicklinks__grid { grid-template-columns: 1fr; }
+
+  /* Nav switches to hamburger from tablet portrait down — six links
+     plus the CTA no longer fit the inline bar below this width. */
+  .nav__links {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: min(300px, 100vw);
+    background: var(--white);
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 80px 32px 32px;
+    gap: 0;
+    transform: translateX(100%);
+    transition: transform var(--transition);
+    box-shadow: -8px 0 40px rgba(60,35,15,.15);
+  }
+  .nav__links.open { transform: translateX(0); }
+  .nav__links li { width: 100%; border-bottom: 1px solid var(--border-light); }
+  .nav__link {
+    display: block;
+    padding: 18px 0;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+  }
+  .nav__cta { width: 100%; justify-content: center; margin-top: 20px; }
+  .nav__hamburger { display: flex; }
+  .nav__hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+  .nav__hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav__hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+}
+
+@media (max-width: 768px) {
+  .section { padding: 80px 0; }
+  .container { padding: 0 20px; }
+
+  .hero__stats { padding: 16px 8px; }
+  .hero__stat { padding: 0 18px; }
+  .hero__stat-num { font-size: 22px; }
+  .hero__stat-label { font-size: 9px; }
+
+  .properties__grid { grid-template-columns: 1fr; }
+  /* Must match the scoped selector at the 1024px breakpoint
+     (.properties__grid .property-card:last-child) specificity-for-
+     specificity — a bare `.property-card:last-child` here is LOWER
+     specificity (two selectors vs three) and silently lost to that rule
+     at every width below 1024px regardless of source order, leaving
+     "span 2" active on a single-column grid: the grid had to invent an
+     implicit second column to satisfy it, which threw off auto-placement
+     for the *other* cards too (not just the spanning one) — exactly what
+     broke the homepage teaser on real phones. */
+  .properties__grid .property-card:last-child { grid-column: span 1; max-width: 100%; margin: 0; }
+
+  .testimonials__track-wrapper { margin: 0 -20px; padding: 0 20px; }
+  .testimonial-card { flex: 0 0 90vw; }
+
+  .host__content .section__title,
+  .host__content .section__eyebrow,
+  .host__content { text-align: center; }
+  .host__content .section__eyebrow { justify-content: center; }
+  .host__content .section__eyebrow::before { display: block; }
+  .host__badge { bottom: -12px; right: -12px; padding: 16px 20px; }
+
+  .footer__grid { grid-template-columns: 1fr; }
+  .footer__brand { grid-column: span 1; }
+  .footer__bottom { flex-direction: column; gap: 8px; text-align: center; }
+  .desktop-only { display: none; }
+
+  .page-hero { min-height: 480px; }
+  .stat-band { padding: 40px 20px; }
+  .stat-band__item { padding: 0 24px; }
+  .stat-band__num { font-size: 30px; }
+  .process-card__list { grid-template-columns: 1fr; }
+  .benefits__grid { grid-template-columns: 1fr; }
+  .work__grid { gap: 32px; }
+  .lead-form { padding: 26px; }
+  .lead-form__row { grid-template-columns: 1fr; }
+  .cta-gradient { padding: 100px 20px 90px; }
+
+  .simple-hero { padding: 140px 20px 70px; }
+  .way-item { grid-template-columns: 40px 1fr; gap: 16px; padding: 24px 0; }
+  .way-item__num { font-size: 20px; }
+  .property-card__top { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .property-card__price { text-align: left; }
+  .quicklink-card { padding: 28px 24px; flex-direction: column; align-items: flex-start; gap: 10px; }
+}
+
+@media (max-width: 480px) {
+  .hero__actions { flex-direction: column; align-items: center; }
+  .hero__actions .btn { width: 100%; max-width: 260px; justify-content: center; }
+  .hero__stat-divider { height: 24px; }
+  .stat-band__divider { display: none; }
+}
+
+/* ═════════════════════════════════════════
+   Villa detail pages (villas/<slug>.html) —
+   real per-property pages pulled from
+   theartiosstays.com: gallery + full copy.
+   ═════════════════════════════════════════ */
+.villa-detail__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-on-light-mid);
+  margin: 128px 0 24px;
+  transition: color var(--transition), gap var(--transition);
+}
+.villa-detail__back:hover { color: var(--terracotta-deep); gap: 10px; }
+.villa-detail__eyebrow { justify-content: flex-start; margin-bottom: 12px; }
+.villa-detail__title {
+  font-family: var(--font-serif);
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 400;
+  color: var(--text-on-light);
+  margin-bottom: 10px;
+}
+.villa-detail__tagline {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--text-on-light-mid);
+  margin-bottom: 32px;
+}
+
+/* Gallery carousel — one real <img> per slide, translateX'd as a strip.
+   No library: main.js just measures the viewport and moves the track. */
+.villa-gallery {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto 56px;
+  padding: 0 40px;
+}
+.villa-gallery__viewport {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  aspect-ratio: 16 / 9;
+  background: var(--cream-2);
+}
+.villa-gallery__track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Without this, a touchmove here is ambiguous to the browser — on iOS in
+     particular it can get claimed by the edge-swipe-back gesture instead
+     of reaching our touchstart/touchend swipe handler in main.js, especially
+     now that the gallery runs edge-to-edge on mobile (see below). pan-y
+     keeps vertical page scroll working natively while telling the browser
+     horizontal panning here is our job, not its own. */
+  touch-action: pan-y;
+}
+.villa-gallery__track img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  flex: 0 0 100%;
+  /* Without these, some browsers treat a horizontal drag over an <img> as
+     a native image-drag/callout gesture instead of a page touch — main.js
+     also preventDefault()s once horizontal intent is clear, but this stops
+     the browser from ever contesting the gesture in the first place. */
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+.villa-gallery__btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.92);
+  color: var(--text-on-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+  font-size: 18px;
+  transition: background var(--transition), transform 0.15s ease;
+  z-index: 2;
+}
+.villa-gallery__btn:hover { background: var(--white); }
+.villa-gallery__btn:active { transform: translateY(-50%) scale(0.92); }
+/* main.js sets .hidden on these for single-photo galleries — the
+   attribute selector's higher specificity is what makes this actually
+   win over the class's own `display:flex` above (the [hidden] rule in
+   the browser's default stylesheet alone can't, since author styles beat
+   user-agent styles at equal specificity). Only surfaced once a villa
+   with a single photo (Oruwa) actually exercised this code path. */
+.villa-gallery__btn[hidden] { display: none; }
+.villa-gallery__btn--prev { left: 56px; }
+.villa-gallery__btn--next { right: 56px; }
+.villa-gallery__counter {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  z-index: 2;
+  padding: 5px 14px;
+  border-radius: var(--radius-pill);
+  background: rgba(42,27,16,.55);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+.villa-gallery__dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+.villa-gallery__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: none;
+  background: var(--border-light);
+  transition: var(--transition);
+}
+.villa-gallery__dot.active { background: var(--terracotta); width: 20px; border-radius: var(--radius-pill); }
+
+/* Body layout — copy + amenities on the left, a sticky enquiry card on
+   the right (mirrors the common villa-listing pattern their own site uses). */
+.villa-detail__grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 64px;
+  align-items: start;
+  padding-bottom: 100px;
+}
+.villa-detail__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 14px;
+  color: var(--text-on-light);
+  font-weight: 500;
+}
+.villa-detail__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+.villa-detail__tag {
+  padding: 7px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--cream-2);
+  color: var(--terracotta-deep);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+.villa-detail__desc {
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--text-on-light-mid);
+  margin-bottom: 40px;
+}
+.villa-detail__subhead {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--text-on-light);
+  margin-bottom: 20px;
+}
+.villa-detail__bullets { display: grid; gap: 18px; margin-bottom: 44px; }
+.villa-detail__bullets li {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--text-on-light-mid);
+  padding-left: 22px;
+  position: relative;
+}
+.villa-detail__bullets li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--terracotta);
+}
+.villa-detail__bullets li strong { color: var(--text-on-light); font-weight: 600; }
+/* House Rules / Cancellation Policy / Things to Know — same list style as
+   the feature bullets above, just tighter and quieter since this is
+   logistics copy, not selling copy. */
+.villa-detail__bullets--policy { gap: 12px; margin-bottom: 40px; }
+/* --text-on-light-light is too pale for real body text on white/cream
+   (down to ~2.3:1, fails AA — see project notes) — this stays on
+   --text-on-light-mid like every other real-text color on this page. */
+.villa-detail__bullets--policy li { font-size: 13px; color: var(--text-on-light-mid); }
+.villa-detail__bullets--policy li strong { color: var(--text-on-light); }
+.villa-detail__bullets--policy li::before { background: var(--text-on-light-mid); }
+.villa-detail__amenities {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+  margin-bottom: 8px;
+}
+.villa-detail__amenities li {
+  font-size: 13px;
+  color: var(--text-on-light-mid);
+  padding-left: 20px;
+  position: relative;
+  list-style: none;
+}
+.villa-detail__amenities li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: var(--terracotta);
+  font-weight: 600;
+}
+
+/* Sticky enquiry card */
+.villa-detail__aside { position: sticky; top: 110px; }
+.villa-detail__card {
+  background: var(--white);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-card);
+  padding: 32px 28px;
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+.villa-detail__card-price {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  color: var(--terracotta-deep);
+  margin-bottom: 4px;
+}
+.villa-detail__card-note {
+  font-size: 12px;
+  color: var(--text-on-light-mid);
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+.villa-detail__card .btn { width: 100%; justify-content: center; }
+.villa-detail__card .btn + .btn { margin-top: 10px; }
+
+@media (max-width: 900px) {
+  .villa-detail__back { margin: 108px 0 20px; }
+  /* Full-bleed on mobile — no side padding, no rounded corners, and a
+     taller aspect ratio than desktop's 16:9 (which read as a thin strip
+     on a narrow phone). This is the real fix for "images look small":
+     the old 20px padding on both sides plus a wide/short crop was
+     shrinking the photo on exactly the screens where space is tightest. */
+  .villa-gallery { padding: 0; margin-bottom: 32px; }
+  .villa-gallery__viewport { border-radius: 0; aspect-ratio: 4/3; }
+  .villa-gallery__btn { width: 38px; height: 38px; }
+  .villa-gallery__btn--prev { left: 12px; }
+  .villa-gallery__btn--next { right: 12px; }
+  .villa-detail__grid { grid-template-columns: 1fr; gap: 40px; padding-bottom: 72px; }
+  .villa-detail__aside { position: static; }
+  .villa-detail__amenities { grid-template-columns: 1fr; }
+}
