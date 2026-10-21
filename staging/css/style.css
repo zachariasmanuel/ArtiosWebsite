@@ -1095,6 +1095,68 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   color: var(--terracotta-deep);
 }
 
+/* ── Trust partners — "Also find us on" logo strip. Wordmarks are built
+   from styled text (not logo image files) using each brand's own public
+   colors, so there's nothing to license or keep in sync as an asset. ── */
+.trust-partners {
+  padding: 64px 0;
+  text-align: center;
+  background: var(--cream-2);
+  border-top: 1px solid var(--border-light);
+}
+.trust-partners__title {
+  font-family: var(--font-serif);
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 300;
+  color: var(--text-on-light);
+  margin-bottom: 36px;
+}
+.trust-partners__logos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 56px;
+}
+.trust-partners__logo {
+  display: inline-flex;
+  align-items: center;
+  opacity: .92;
+  transition: opacity var(--transition), transform var(--transition);
+}
+.trust-partners__logo:hover { opacity: 1; transform: translateY(-2px); }
+.trust-partners__booking {
+  font-family: var(--font-sans);
+  font-size: 44px;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: #003580;
+}
+.trust-partners__booking span { color: #2e6ff2; }
+.trust-partners__mmt {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-sans);
+  font-size: 38px;
+  font-weight: 700;
+  color: #1B2B4A;
+  text-transform: lowercase;
+}
+.trust-partners__mmt-my {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 48px;
+  border-radius: 14px;
+  background: #E31E24;
+  color: var(--white);
+  font-style: italic;
+  font-size: 30px;
+  margin: 0 2px;
+}
+
 /* ── Footer — light, warmed with a soft pastel-orange tint rather than
    stark white, so it still reads as a distinct closing band. ── */
 .footer {
